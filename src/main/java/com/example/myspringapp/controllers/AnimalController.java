@@ -1,5 +1,6 @@
 package com.example.myspringapp.controllers;
 
+import com.example.myspringapp.dto.AnimalDto;
 import com.example.myspringapp.entities.Animal;
 import com.example.myspringapp.services.AnimalService;
 import jakarta.servlet.http.HttpSession;
@@ -35,17 +36,22 @@ public class AnimalController {
     }
 
     @PostMapping("/animal/create")
-    public ResponseEntity<?> insert(@RequestBody Animal animal, HttpSession session){
+    public ResponseEntity<?> insert(@RequestBody AnimalDto animal, HttpSession session){
         return animalService.insert(animal, session);
     }
 
-    @PostMapping(value = "/animal/setphoto/{id}")
+    @PostMapping("/animal/setphoto/{id}")
     public void setphoto(@RequestParam("file") MultipartFile file, @PathVariable("id") Long id) throws Exception {
         animalService.insertphoto(file, id);
     }
 
+    @GetMapping("/animal/{id}")
+    public ResponseEntity<?> specific(@PathVariable("id") Long id){
+        return animalService.specific(id);
+    }
+
     @PutMapping("/animal/update/{id}")
-    public ResponseEntity<?> update(@RequestBody Animal animal, @PathVariable("id") Long id){
+    public ResponseEntity<?> update(@RequestBody AnimalDto animal, @PathVariable("id") Long id){
         return animalService.update(animal, id);
     }
 

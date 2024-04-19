@@ -1,5 +1,7 @@
 package com.example.myspringapp.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -20,7 +22,10 @@ public class User implements Serializable {
     @Column(unique = true)
     private String email;
     private String password;
+    @JsonBackReference
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
     private Collection<Category> categories;
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private Collection<Product> products;
 }

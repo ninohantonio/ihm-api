@@ -4,6 +4,7 @@ import com.example.myspringapp.dao.AnimalRepository;
 import com.example.myspringapp.dao.CategoryRepository;
 import com.example.myspringapp.dao.SexeRepository;
 import com.example.myspringapp.dao.UserRepository;
+import com.example.myspringapp.dto.AnimalDto;
 import com.example.myspringapp.entities.Animal;
 import com.example.myspringapp.entities.Category;
 import com.example.myspringapp.entities.Sexe;
@@ -47,12 +48,14 @@ public class AnimalService{
                 .collect(Collectors.toList());
     }
 
-    public ResponseEntity<?> insert(Animal animal, HttpSession session){
+    public ResponseEntity<?> insert(AnimalDto animal, HttpSession session){
         try{
             Animal a = new Animal();
+            Category c = categoryRepository.findById(animal.getCategory()).get();
+            Sexe s = sexeRepository.findById(animal.getSexe()).get();
             a.setVaccine(animal.getVaccine());
-            a.setCategory(animal.getCategory());
-            a.setSexe(animal.getSexe());
+            a.setCategory(c);
+            a.setSexe(s);
             a.setAge(animal.getAge());
             a.setSante(animal.getSante());
             a.setPoids(animal.getPoids());
@@ -68,10 +71,18 @@ public class AnimalService{
 
     }
 
+    public ResponseEntity<?> specific(Long id){
+        try{
+            return ResponseEntity.ok(animalRepository.findById(id).get());
+        }catch (Exception e){
+            return new ResponseEntity<>("error "+ e, HttpStatusCode.valueOf(500));
+        }
+    }
+
     public void insertphoto(MultipartFile file, Long id) throws Exception{
         try{
             Animal a = animalRepository.findById(id).get();
-            a.setPhotoUrl(a.getCategory() + "." + id + ".jpg");
+            a.setPhotoUrl(a.getCategory().getName() + "." + id + ".jpg");
             Files.write(Paths.get(System.getProperty("user.home") + "/fermedata/animals/" + a.getPhotoUrl()), file.getBytes());
             animalRepository.save(a);
         }catch (Exception e){
@@ -84,14 +95,15 @@ public class AnimalService{
         return Files.readAllBytes(Paths.get(System.getProperty("user.home") + "/fermedata/animals/" + a.getPhotoUrl()));
     }
 
-    public ResponseEntity<?> update(Animal animal, Long id){
+    public ResponseEntity<?> update(AnimalDto animal, Long id){
         try{
             Animal a = animalRepository.findById(id).get();
+            Sexe s = sexeRepository.findById(animal.getSexe()).get();
             a.setVaccine(animal.getVaccine());
             a.setAge(animal.getAge());
             a.setDescription(animal.getDescription());
             a.setPoids(animal.getPoids());
-            a.setSexe(animal.getSexe());
+            a.setSexe(s);
             a.setSante(animal.getSante());
             Animal save = animalRepository.save(a);
             return new ResponseEntity<>(save, HttpStatusCode.valueOf(200));

@@ -1,7 +1,10 @@
 package com.example.myspringapp.services;
 
 import com.example.myspringapp.dao.ProductRepository;
+import com.example.myspringapp.dao.UserRepository;
+import com.example.myspringapp.dto.AlimentDto;
 import com.example.myspringapp.entities.Product;
+import com.example.myspringapp.entities.User;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -10,14 +13,42 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+
 @Service
 public class AlimentService {
     @Autowired
     private ProductRepository productRepository;
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserRepository userRepository;
 
-    public ResponseEntity<?> insert(Product produit, HttpSession session){
+    public Collection<Product> all(HttpSession session){
+        User connecteduseruser = userService.connecteduser(session);
+        User user = userRepository.findById(connecteduseruser.getId()).get();
+        return user.getProducts();
+    }
+
+    public Collection<Product> getProductsByKeywordForCurrentUser(String keyword, HttpSession session) {
+        User connecteduser = userService.connecteduser(session);
+        return productRepository.findByUserAndDesignationContaining(connecteduser, keyword);
+    }
+
+    public Collection<Product> getProductBySearchPromptForCurrentUser(String searchTerm, HttpSession session){
+        User user = userService.connecteduser(session);
+        try {
+            // Essayer de convertir searchTerm en double
+            double quantite = Double.parseDouble(searchTerm);
+            // Si la conversion réussit, rechercher par quantité
+            return productRepository.findByUserAndQuantite(user, quantite);
+        } catch (NumberFormatException e) {
+            // Si la conversion échoue, rechercher par désignation
+            return productRepository.findByUserAndDesignationContainingIgnoreCase(user, searchTerm);
+        }
+    }
+
+    public ResponseEntity<?> insert(AlimentDto produit, HttpSession session){
         try{
             Product a = new Product();
             a.setQuantite(produit.getQuantite());
@@ -32,7 +63,7 @@ public class AlimentService {
         }
     }
 
-    public ResponseEntity<?> update(Product product, Long id){
+    public ResponseEntity<?> update(AlimentDto product, Long id){
         try{
             Product a = productRepository.findById(id).get();
             a.setDesignation(product.getDesignation());

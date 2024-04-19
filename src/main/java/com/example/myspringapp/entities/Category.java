@@ -1,6 +1,7 @@
 package com.example.myspringapp.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,11 +20,13 @@ public class Category implements Serializable {
     private String name;
     private int dureeMoyen;
     private int prix;
-    @ManyToOne
     @JsonBackReference
+    @ManyToOne
     private User user;
+    @JsonBackReference
     @OneToMany(mappedBy = "category")
     private Collection<Animal> animals;
-//    @OneToMany(mappedBy = "category")
-//    private Collection<Vaccination> vaccinations;
+    @JsonBackReference
+    @OneToMany(mappedBy = "category")
+    private Collection<Alimentation> alimentations;
 }

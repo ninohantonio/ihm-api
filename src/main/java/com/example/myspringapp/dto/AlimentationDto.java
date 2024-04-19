@@ -1,31 +1,27 @@
-package com.example.myspringapp.entities;
+package com.example.myspringapp.dto;
 
+import com.example.myspringapp.entities.Category;
+import com.example.myspringapp.entities.Product;
+import com.example.myspringapp.entities.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.*;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.io.Serializable;
 import java.time.LocalTime;
 
-@Entity
-@Data @NoArgsConstructor @AllArgsConstructor @ToString
-public class Alimentation implements Serializable {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@Data
+@AllArgsConstructor @NoArgsConstructor @ToString
+public class AlimentationDto {
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime heure;
     private double quantite;
     private int ageMin;
     private int ageMax;
-    @ManyToOne
-    private User user;
-    @ManyToOne
-    private Category category;
-    @ManyToOne
-    private Product product;
+    private Long category;
+    private Long product;
 }

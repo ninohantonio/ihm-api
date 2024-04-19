@@ -1,6 +1,7 @@
 package com.example.myspringapp.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,15 +22,16 @@ public class Animal implements Serializable {
     private double age;
     private double poids;
     private String photoUrl;
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonBackReference
     private User user;
+//    @JsonBackReference
     @ManyToOne
-    @JsonBackReference
     private Sexe sexe;
-    @ManyToOne
     @JsonBackReference
+    @ManyToOne
     private Category category;
+    @JsonBackReference
     @OneToOne(mappedBy = "animal")
     private Vente vente;
 

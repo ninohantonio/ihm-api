@@ -2,6 +2,7 @@ package com.example.myspringapp.services;
 
 import com.example.myspringapp.dao.CategoryRepository;
 import com.example.myspringapp.dao.UserRepository;
+import com.example.myspringapp.dto.CategoryDto;
 import com.example.myspringapp.entities.Category;
 import com.example.myspringapp.entities.User;
 import jakarta.servlet.http.HttpSession;
@@ -30,9 +31,19 @@ public class CategoryService {
         return user.getCategories();
     }
 
-    public ResponseEntity<?> insert(Category category, HttpSession session){
+    public Long firstcategory(HttpSession session){
+        User connecteduser = userService.connecteduser(session);
+        User user = userRepository.findById(connecteduser.getId()).orElseThrow(() -> new RuntimeException("User not found"));
+        Long catId = user.getCategories().stream().findFirst().map(Category::getId).orElse(0L);
+        return catId;
+    }
+
+    public ResponseEntity<?> insert(CategoryDto category, HttpSession session){
         try{
-            Category a = categoryRepository.save(category);
+            Category a = new Category();
+            a.setName(category.getName());
+            a.setPrix(category.getPrix());
+            a.setDureeMoyen(category.getDureeMoyen());
             a.setUser(userService.connecteduser(session));
             Category created = categoryRepository.save(a);
             return new ResponseEntity<>(created, HttpStatusCode.valueOf(200));

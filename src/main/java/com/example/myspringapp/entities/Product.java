@@ -1,5 +1,6 @@
 package com.example.myspringapp.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,6 +15,7 @@ public class Product implements Serializable {
     private Long id;
     private String designation;
     private double quantite;
+    @JsonManagedReference
     @ManyToOne
     private User user;
 }
