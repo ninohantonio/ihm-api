@@ -5,6 +5,7 @@ import com.example.myspringapp.entities.Animal;
 import com.example.myspringapp.services.AnimalService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,26 @@ public class AnimalController {
     @GetMapping("/animal/sexe/{sexeid}/{category}")
     public Collection<Animal> parsexe(@PathVariable("sexeid") Long id, @PathVariable("category") Long cat){
         return animalService.parsexe(id, cat);
+    }
+
+    @GetMapping("/animal/filterbyhealth/{category}")
+    public Collection<Animal> filterbyhealth(@PathVariable("category") Long categoryId,@Param("sante") String sante){
+        return animalService.filterBySante(sante, categoryId);
+    }
+
+    @GetMapping("/animal/filterbyvaccine/{category}")
+    public Collection<Animal> filterbyvaccin(@PathVariable("category") Long categoryId, @Param("vaccine") Boolean vaccine){
+        return animalService.filterByVaccine(categoryId, vaccine);
+    }
+
+    @GetMapping("/animal/filterbypoid/{category}")
+    public Collection<Animal> filterbypoid(@PathVariable("category") Long categoryId){
+        return animalService.filterByPoid(categoryId);
+    }
+
+    @GetMapping("/animal/filterbyage/{category}")
+    public Collection<Animal> filterbyage(@PathVariable("category") Long categoryId){
+        return animalService.filterByAge(categoryId);
     }
 
     @GetMapping(value = "/animal/getphoto/{id}", produces = MediaType.IMAGE_JPEG_VALUE)

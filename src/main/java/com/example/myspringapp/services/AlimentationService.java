@@ -9,12 +9,14 @@ import com.example.myspringapp.entities.Category;
 import com.example.myspringapp.entities.Product;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.util.Collection;
 
 @Service
@@ -31,6 +33,11 @@ public class AlimentationService {
     public Collection<Alimentation> all(Long categoryId){
         Category category = categoryRepository.findById(categoryId).get();
         return category.getAlimentations();
+    }
+
+    public Collection<Alimentation> search(Long categoryId, LocalTime time){
+        Category category = categoryRepository.findById(categoryId).get();
+        return alimentationRepository.findByHeureAndCategory(time, category);
     }
 
     public ResponseEntity<?> insert(AlimentationDto aliment, HttpSession session){

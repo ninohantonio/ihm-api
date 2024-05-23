@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalTime;
 import java.util.Collection;
 
 @RestController
@@ -34,6 +35,11 @@ public class AlimentController {
     @GetMapping("/aliment/search")
     public Collection<Product> getBySearch(@Param("search") String search, HttpSession session){
         return alimentService.getProductBySearchPromptForCurrentUser(search, session);
+    }
+
+    @GetMapping("/alimentation/search/{category}")
+    public Collection<Alimentation> search(@PathVariable("category") Long categoryId, @Param("heure") LocalTime time){
+        return alimentationService.search(categoryId, time);
     }
 
     @GetMapping("/aliment")

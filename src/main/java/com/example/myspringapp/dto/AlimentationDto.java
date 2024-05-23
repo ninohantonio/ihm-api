@@ -17,7 +17,7 @@ import java.time.LocalTime;
 @AllArgsConstructor @NoArgsConstructor @ToString
 public class AlimentationDto {
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
-    @JsonFormat(pattern = "HH:mm:ss")
+    @JsonFormat(pattern = "HH:mm")
     private LocalTime heure;
     private double quantite;
     private int ageMin;

@@ -12,6 +12,7 @@ import com.example.myspringapp.entities.User;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -46,6 +47,28 @@ public class AnimalService{
         return animalRepository.findAll().stream()
                 .filter(animal -> sexe.equals(animal.getSexe()) && category1.equals(animal.getCategory()))
                 .collect(Collectors.toList());
+    }
+
+    public Collection<Animal> filterBySante(String sante, Long categoryId){
+        Category category = categoryRepository.findById(categoryId).get();
+        return animalRepository.findByCategoryAndSante(category, sante);
+    }
+
+    public Collection<Animal> filterByVaccine(Long categoryId, Boolean vaccin){
+        Category category = categoryRepository.findById(categoryId).get();
+        return animalRepository.findByCategoryAndVaccine(category, vaccin);
+    }
+
+    public Collection<Animal> filterByPoid(Long categoryId){
+        Category category = categoryRepository.findById(categoryId).get();
+        Sort sort = Sort.by(Sort.Direction.ASC, "poids");
+        return animalRepository.findByCategory(category, sort);
+    }
+
+    public Collection<Animal> filterByAge(Long categoryId){
+        Category category = categoryRepository.findById(categoryId).get();
+        Sort sort = Sort.by(Sort.Direction.ASC, "age");
+        return animalRepository.findByCategory(category, sort);
     }
 
     public ResponseEntity<?> insert(AnimalDto animal, HttpSession session){

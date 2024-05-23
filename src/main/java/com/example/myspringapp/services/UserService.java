@@ -15,15 +15,24 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 @Service
 public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    private final Map<String, UserInfo> sessionDataMap = new ConcurrentHashMap<>();
+
     public ResponseEntity<?> signup(UserDto userDto){
         try{
             if(userRepository.existsByEmail(userDto.getEmail())){
-                return new ResponseEntity<>("used", HttpStatus.BAD_REQUEST);
+                Message message = new Message();
+                message.setMessage("Mail deja Utiliser");
+                message.setSuccess(false);
+                return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
             }
             User newuser = new User();
             newuser.setEmail(userDto.getEmail());
@@ -48,6 +57,7 @@ public class UserService {
                     userInfo.setId(user.getId());
                     userInfo.setUsername(user.getUsername());
                     userInfo.setEmail(user.getEmail());
+                    setSessionData(user.getEmail(), userInfo);
                     session.setAttribute("loggedInUser", userInfo);
                     return new ResponseEntity<>(userInfo, HttpStatusCode.valueOf(200));
                 }else {
@@ -81,6 +91,15 @@ public class UserService {
         UserInfo userInfo = (UserInfo) session.getAttribute("loggedInUser");
         return userRepository.findById(userInfo.getId()).get();
     }
+
+    public void setSessionData(String sessionId, UserInfo userInfo) {
+        sessionDataMap.put(sessionId, userInfo);
+    }
+
+    public UserInfo getSessionData(String sessionId) {
+        return sessionDataMap.get(sessionId);
+    }
+
 
     public ResponseEntity<?> logout(HttpSession session){
         session.invalidate();

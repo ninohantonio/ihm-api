@@ -7,9 +7,11 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 
 @SpringBootApplication
+@EnableScheduling
 public class MyspringappApplication implements CommandLineRunner {
     @Autowired
     private RepositoryRestConfiguration repositoryRestConfiguration;
@@ -20,7 +22,7 @@ public class MyspringappApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        repositoryRestConfiguration.exposeIdsFor(Sexe.class, Category.class, Animal.class, Alimentation.class, Product.class, Vaccination.class, Vente.class, Achat.class, Reproduction.class, User.class);
+//        repositoryRestConfiguration.exposeIdsFor(Sexe.class, Category.class, Animal.class, Alimentation.class, Product.class, Vaccination.class, Vente.class, Achat.class, Reproduction.class, User.class);
 //        categoryRepository.save(new Category(null, "Bovin", 25, 20000, null));
 //        categoryRepository.save(new Category(null, "Porcin", 2, 20000, null));
 //
