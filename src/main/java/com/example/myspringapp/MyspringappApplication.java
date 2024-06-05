@@ -22,7 +22,7 @@ public class MyspringappApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-//        repositoryRestConfiguration.exposeIdsFor(Sexe.class, Category.class, Animal.class, Alimentation.class, Product.class, Vaccination.class, Vente.class, Achat.class, Reproduction.class, User.class);
+        repositoryRestConfiguration.exposeIdsFor(Sexe.class, Category.class, Animal.class, Alimentation.class, Product.class, Vaccination.class, Vente.class, Achat.class, Reproduction.class, User.class);
 //        categoryRepository.save(new Category(null, "Bovin", 25, 20000, null));
 //        categoryRepository.save(new Category(null, "Porcin", 2, 20000, null));
 //

@@ -15,9 +15,7 @@ public class Vente implements Serializable {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String description;
-    @JsonBackReference
     @ManyToOne
     private Category category;
-    @OneToOne
-    private Animal animal;
+    private double poids;
 }

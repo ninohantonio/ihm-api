@@ -31,8 +31,5 @@ public class Animal implements Serializable {
     @JsonBackReference
     @ManyToOne
     private Category category;
-    @JsonBackReference
-    @OneToOne(mappedBy = "animal")
-    private Vente vente;
 
 }
